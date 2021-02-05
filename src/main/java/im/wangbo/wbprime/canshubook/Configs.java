@@ -34,6 +34,12 @@ public final class Configs {
         }
     }
 
+    public interface KeyFactory {
+        Key root();
+
+        Key create(final String str);
+    }
+
     public enum ValueType {
         MAP, LIST, NUMBER, BOOLEAN, STRING
     }
@@ -270,5 +276,13 @@ public final class Configs {
 
     public static MapValue value(final Map<Configs.Key, ? extends Configs.Value> v) {
         return ConfigValues.of(v);
+    }
+
+    public static Configs.KeyFactory forDotted() {
+        return ConfigKeys.of(".", true);
+    }
+
+    public static Configs.KeyFactory forDashDashed() {
+        return ConfigKeys.of("__", false);
     }
 }

@@ -4,14 +4,13 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import im.wangbo.wbprime.canshubook.spi.KeyFactory;
 
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.UnaryOperator;
 
 /**
- * A {@link KeyFactory} to parse {@link im.wangbo.wbprime.canshubook.Configs.Key} from string with
+ * A {@link Configs.KeyFactory} to parse {@link im.wangbo.wbprime.canshubook.Configs.Key} from string with
  * customized separator and case sensitivity strategy.
  * <p>
  * Given separator ".":
@@ -25,11 +24,11 @@ import java.util.function.UnaryOperator;
  * @author Elvis Wang
  * @since 1.0.0
  */
-public final class StdKeyFactory extends KeyFactory {
+final class StdKeyFactory implements Configs.KeyFactory {
     private final KeySpec spec;
     private final AbstractKey root;
 
-    public StdKeyFactory(final KeySpec spec) {
+    StdKeyFactory(final KeySpec spec) {
         this.spec = spec;
         this.root = new RootKey(this);
     }
