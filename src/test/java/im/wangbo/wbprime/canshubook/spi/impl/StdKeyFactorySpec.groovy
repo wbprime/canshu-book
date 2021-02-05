@@ -435,4 +435,53 @@ class StdKeyFactorySpec extends Specification {
         "__" | "root//sub" | "A__B__"   | "B"   | 3
         "__" | "root..sub" | ".A__/B__" | "/B"  | 3
     }
+
+    def "test equals() for root key from different separator spec"() {
+        given:
+        StdKeyFactory factory1 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("."))
+        Config.Key k1 = factory1.root();
+        StdKeyFactory factory2 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("/"))
+        Config.Key k2 = factory2.root();
+
+        expect:
+        k1 != k2
+    }
+
+    def "test equals() for root key from different case sensitivity spec"() {
+        given:
+        StdKeyFactory factory1 = new StdKeyFactory(StdKeyFactory.CaseInsensitiveKeySpec.of("."))
+        Config.Key k1 = factory1.root();
+        StdKeyFactory factory2 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("."))
+        Config.Key k2 = factory2.root();
+
+        expect:
+        k1 != k2
+    }
+
+    def "test equals() for root key from equaled spec"() {
+        given:
+        StdKeyFactory factory1 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("."))
+        Config.Key k1 = factory1.root();
+        StdKeyFactory factory2 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("."))
+        Config.Key k2 = factory2.root();
+
+        expect:
+        k1 == k2
+    }
+
+    def "test equals() for non-root case sensitive key"() {
+        given:
+        StdKeyFactory factory = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("Z"))
+        Config.Key key1 = factory.create(str1);
+        Config.Key key2 = factory.create(str2);
+
+        expect:
+        key1 == key2
+
+        where:
+        str1    | str2
+        "ZZZZ"  | ""
+        "aZbZc" | "ZaZZbZZcZ"
+        "aZBZc" | "ZaZZBZZcZ"
+    }
 }

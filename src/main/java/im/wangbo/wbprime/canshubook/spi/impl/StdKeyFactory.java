@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 import im.wangbo.wbprime.canshubook.Config;
 import im.wangbo.wbprime.canshubook.spi.KeyFactory;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.UnaryOperator;
 
@@ -45,6 +45,26 @@ public final class StdKeyFactory extends KeyFactory {
         return resolve(root, s);
     }
 
+    @Override
+    public String toString() {
+        return "StdKeyFactory{" +
+                "spec=" + spec +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StdKeyFactory that = (StdKeyFactory) o;
+        return spec.equals(that.spec);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(spec);
+    }
+
     abstract static class AbstractKey implements Config.Key {
         private final StdKeyFactory factory;
 
@@ -68,6 +88,19 @@ public final class StdKeyFactory extends KeyFactory {
             final StringBuilder sb = new StringBuilder("Key {|>");
             Joiner.on("->").appendTo(sb, segments());
             return sb.append("}").toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || !AbstractKey.class.isAssignableFrom(o.getClass())) return false;
+            AbstractKey that = (AbstractKey) o;
+            return Objects.equals(factory.spec, that.factory.spec) && Objects.equals(segments(), that.segments());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(segments());
         }
     }
 
@@ -108,6 +141,8 @@ public final class StdKeyFactory extends KeyFactory {
         private final String keyStr;
         private final OpenClose range; // [inclusive, exclusive)
 
+        private transient volatile ImmutableList<CharSequence> cachedSegments;
+
         public KeyImpl(final StdKeyFactory factory, AbstractKey ancestor, String keyStr, OpenClose range) {
             super(factory);
             this.ancestor = ancestor;
@@ -131,9 +166,18 @@ public final class StdKeyFactory extends KeyFactory {
 
         @Override
         public final ImmutableList<CharSequence> segments() {
-            final ImmutableList.Builder<CharSequence> builder = ImmutableList.builder();
-            collectSegments(builder);
-            return builder.build();
+            ImmutableList<CharSequence> list = cachedSegments;
+            if (null == list) {
+                synchronized (this) {
+                    list = cachedSegments;
+                    if (null == list) {
+                        final ImmutableList.Builder<CharSequence> builder = ImmutableList.builder();
+                        collectSegments(builder);
+                        cachedSegments = list = builder.build();
+                    }
+                }
+            }
+            return list;
         }
 
         @Override
@@ -143,9 +187,7 @@ public final class StdKeyFactory extends KeyFactory {
 
         @Override
         public int depth() {
-            final AtomicInteger n = new AtomicInteger(ancestor.depth() + 1);
-            factory().each(keyStr, range.left(), (_1, _2) -> n.incrementAndGet());
-            return n.get();
+            return segments().size();
         }
     }
 

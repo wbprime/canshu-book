@@ -25,7 +25,9 @@ public interface Config {
 
         ImmutableList<CharSequence> segments();
 
-        int depth();
+        default int depth() {
+            return segments().size();
+        }
     }
 
     interface Value {
