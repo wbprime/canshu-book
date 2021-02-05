@@ -4,7 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import im.wangbo.wbprime.canshubook.Config;
+import im.wangbo.wbprime.canshubook.Configs;
 import im.wangbo.wbprime.canshubook.spi.KeyFactory;
 
 import java.util.Objects;
@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
 import java.util.function.UnaryOperator;
 
 /**
- * A {@link KeyFactory} to parse {@link im.wangbo.wbprime.canshubook.Config.Key} from string with
+ * A {@link KeyFactory} to parse {@link im.wangbo.wbprime.canshubook.Configs.Key} from string with
  * customized separator and case sensitivity strategy.
  * <p>
  * Given separator ".":
@@ -36,12 +36,12 @@ public final class StdKeyFactory extends KeyFactory {
     }
 
     @Override
-    public Config.Key root() {
+    public Configs.Key root() {
         return root;
     }
 
     @Override
-    public Config.Key create(final String s) {
+    public Configs.Key create(final String s) {
         return resolve(root, s);
     }
 
@@ -65,7 +65,7 @@ public final class StdKeyFactory extends KeyFactory {
         return Objects.hash(spec);
     }
 
-    abstract static class AbstractKey implements Config.Key {
+    abstract static class AbstractKey implements Configs.Key {
         private final StdKeyFactory factory;
 
         AbstractKey(final StdKeyFactory factory) {
@@ -79,7 +79,7 @@ public final class StdKeyFactory extends KeyFactory {
         abstract void collectSegments(final ImmutableList.Builder<CharSequence> builder);
 
         @Override
-        public final Config.Key resolve(final String key) {
+        public final Configs.Key resolve(final String key) {
             return factory.resolve(this, key);
         }
 
@@ -104,13 +104,13 @@ public final class StdKeyFactory extends KeyFactory {
         }
     }
 
-    static class RootKey extends AbstractKey implements Config.Key {
+    static class RootKey extends AbstractKey implements Configs.Key {
         RootKey(final StdKeyFactory factory) {
             super(factory);
         }
 
         @Override
-        public Config.Key parent() {
+        public Configs.Key parent() {
             return this;
         }
 
@@ -135,7 +135,7 @@ public final class StdKeyFactory extends KeyFactory {
         }
     }
 
-    static class KeyImpl extends AbstractKey implements Config.Key {
+    static class KeyImpl extends AbstractKey implements Configs.Key {
         private final AbstractKey ancestor;
 
         private final String keyStr;
@@ -151,7 +151,7 @@ public final class StdKeyFactory extends KeyFactory {
         }
 
         @Override
-        public Config.Key parent() {
+        public Configs.Key parent() {
             return factory().resolve(ancestor, keyStr, range.left());
         }
 
@@ -191,12 +191,12 @@ public final class StdKeyFactory extends KeyFactory {
         }
     }
 
-    private Config.Key resolve(final AbstractKey ancestor, final String key) {
+    private Configs.Key resolve(final AbstractKey ancestor, final String key) {
         final String str = spec.caseMapper().apply(key);
         return resolve(ancestor, str, str.length());
     }
 
-    private Config.Key resolve(final AbstractKey ancestor, final String key, final int right) {
+    private Configs.Key resolve(final AbstractKey ancestor, final String key, final int right) {
         final OpenClose found = findPrevious(key, spec.separator(), right);
         if (found.left() != -1) {
             return new KeyImpl(this, ancestor, key, found);

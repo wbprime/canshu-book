@@ -1,8 +1,6 @@
 package im.wangbo.wbprime.canshubook.spi;
 
-import im.wangbo.wbprime.canshubook.Config;
-
-import java.util.Optional;
+import im.wangbo.wbprime.canshubook.Configs;
 
 /**
  * TODO add description here.
@@ -11,7 +9,7 @@ import java.util.Optional;
  * @since 1.0.0
  */
 public abstract class KeyFactory {
-    public abstract Config.Key root();
+    public abstract Configs.Key root();
 
-    public abstract Config.Key create(final String str);
+    public abstract Configs.Key create(final String str);
 }

@@ -1,13 +1,6 @@
 package im.wangbo.wbprime.canshubook;
 
-import com.google.common.collect.ImmutableList;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.OptionalLong;
 
 /**
  * TODO add description here.
@@ -15,78 +8,37 @@ import java.util.OptionalLong;
  * @author Elvis Wang
  * @since 1.0.0
  */
-public interface Config {
-    interface Key {
-        Key resolve(final String key);
+public interface Config extends Configs.Value {
+    @Override
+    Configs.ValueType type();
 
-        Key parent();
-
-        CharSequence segment();
-
-        ImmutableList<CharSequence> segments();
-
-        default int depth() {
-            return segments().size();
-        }
+    @Override
+    default Optional<Configs.BooleanValue> asBoolean() {
+        return Optional.empty();
     }
 
-    interface Value {
-        ValueType type();
-
-        Optional<BooleanValue> asBoolean();
-
-        Optional<StringValue> asString();
-
-        Optional<NumberValue> asNumber();
-
-        Optional<ListValue> asList();
-
-        Optional<MapValue> asMap();
-
-        <T> Optional<T> as(final Class<? extends T> clz);
+    @Override
+    default Optional<Configs.StringValue> asString() {
+        return Optional.empty();
     }
 
-    enum ValueType {
-        MAP, LIST, NUMBER, BOOLEAN, STRING
+    @Override
+    default Optional<Configs.NumberValue> asNumber() {
+        return Optional.empty();
     }
 
-    interface NumberValue extends Value {
-        BigDecimal get();
-
-        default double getDouble() {
-            return get().doubleValue();
-        }
-
-        default OptionalInt asInt() {
-            try {
-                return OptionalInt.of(get().intValueExact());
-            } catch (ArithmeticException ex) {
-                return OptionalInt.empty();
-            }
-        }
-
-        default OptionalLong asLong() {
-            try {
-                return OptionalLong.of(get().longValueExact());
-            } catch (ArithmeticException ex) {
-                return OptionalLong.empty();
-            }
-        }
+    @Override
+    default Optional<Configs.ListValue> asList() {
+        return Optional.empty();
     }
 
-    interface BooleanValue extends Value {
-        boolean get();
+    @Override
+    default Optional<Configs.MapValue> asMap() {
+        return Optional.empty();
     }
 
-    interface StringValue extends Value {
-        String get();
+    @Override
+    default <T> Optional<T> as(final Class<? extends T> clz) {
+        return Optional.empty();
     }
-
-    interface ListValue extends Value, List<Value> {
-
-    }
-
-    interface MapValue extends Value, Map<Key, Value> {
-    }
-
 }
