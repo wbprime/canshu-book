@@ -1,6 +1,7 @@
 package im.wangbo.wbprime.canshubook.spi.impl
 
 import com.google.common.collect.ImmutableList
+import im.wangbo.wbprime.canshubook.Config
 import spock.lang.Specification
 
 /**
@@ -377,5 +378,61 @@ class StdKeyFactorySpec extends Specification {
         "Yz" | "imyZwangbo"                  | "imyZwangbo"                  | 1     | ""
         "Yz" | "imyZwangboyZwbprime"         | "imyZwangboyZwbprime"         | 1     | ""
         "Yz" | "yZimyZyZwangboyZwbprimeyZyZ" | "yZimyZyZwangboyZwbprimeyZyZ" | 1     | ""
+    }
+
+    def "test resolve() of Key for root"() {
+        given:
+        StdKeyFactory.KeySpec settings = StdKeyFactory.CaseSensitiveKeySpec.of(sep)
+        StdKeyFactory factory = new StdKeyFactory(settings)
+        Config.Key parent = factory.root();
+
+        when:
+        var key = parent.resolve(str)
+
+        then:
+        key.segment() == cur
+        key.depth() == depth
+
+        where:
+        sep  | str        | cur   | depth
+        "."  | ""         | ""    | 0
+        "."  | " "        | " "   | 1
+        "."  | "a"        | "a"   | 1
+        "."  | "a.b"      | "b"   | 2
+        "/"  | "a//b/"    | "b"   | 2
+        "/"  | "/a//b/"   | "b"   | 2
+        "__" | "A.B"      | "A.B" | 1
+        "__" | "A__B__"   | "B"   | 2
+        "__" | ".A__/B__" | "/B"  | 2
+    }
+
+    def "test resolve() of Key for non-root"() {
+        given:
+        StdKeyFactory.KeySpec settings = StdKeyFactory.CaseSensitiveKeySpec.of(sep)
+        StdKeyFactory factory = new StdKeyFactory(settings)
+        Config.Key parent = factory.create(pstr);
+
+        when:
+        var key = parent.resolve(str)
+
+        then:
+        key.segment() == cur
+        key.depth() == depth
+
+        where:
+        sep  | pstr        | str        | cur   | depth
+        "."  | ""          | "A.B"      | "B"   | 2
+        "/"  | ""          | "A_/B__"   | "B__" | 2
+        "__" | ""          | ".A__/B__" | "/B"  | 2
+        "."  | "root..sub" | ""         | "sub" | 2
+        "."  | "root..sub" | " "        | " "   | 3
+        "."  | "root//sub" | "a"        | "a"   | 2
+        "."  | "root__sub" | "a.b"      | "b"   | 3
+        "/"  | "root..sub" | "a//b/"    | "b"   | 3
+        "/"  | "root//sub" | "/a//b/"   | "b"   | 4
+        "/"  | "root__sub" | "/a//b/"   | "b"   | 3
+        "__" | "root..sub" | "A.B"      | "A.B" | 2
+        "__" | "root//sub" | "A__B__"   | "B"   | 3
+        "__" | "root..sub" | ".A__/B__" | "/B"  | 3
     }
 }
