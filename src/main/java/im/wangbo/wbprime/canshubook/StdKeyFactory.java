@@ -1,10 +1,9 @@
-package im.wangbo.wbprime.canshubook.spi.impl;
+package im.wangbo.wbprime.canshubook;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import im.wangbo.wbprime.canshubook.Configs;
 import im.wangbo.wbprime.canshubook.spi.KeyFactory;
 
 import java.util.Objects;

@@ -1,7 +1,6 @@
-package im.wangbo.wbprime.canshubook.spi.impl
+package im.wangbo.wbprime.canshubook
 
 import com.google.common.collect.ImmutableList
-import im.wangbo.wbprime.canshubook.Configs
 import spock.lang.Specification
 
 /**
