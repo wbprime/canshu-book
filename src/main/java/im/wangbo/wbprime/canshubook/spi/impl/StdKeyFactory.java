@@ -12,13 +12,15 @@ import java.util.function.BiConsumer;
 import java.util.function.UnaryOperator;
 
 /**
- * A {@link KeyFactory} from/to string with domain name style strategy.
- *
+ * A {@link KeyFactory} to parse {@link im.wangbo.wbprime.canshubook.Config.Key} from string with
+ * customized separator and case sensitivity strategy.
+ * <p>
+ * Given separator ".":
  * <ol>
  * <li> "im.wangbo.wbprime" => ["im", "wangbo", "wbprime"] </li>
- * <li> ".wangbo.wbprime" => ["", "wangbo", "wbprime"] </li>
- * <li> ".wangbo." => ["", "wangbo", ""] </li>
- * <li> ".wangbo.." => ["", "wangbo", "", ""] </li>
+ * <li> ".wangbo.wbprime" => ["wangbo", "wbprime"] </li>
+ * <li> ".wangbo." => ["wangbo"] </li>
+ * <li> ".wangbo.." => ["wangbo"] </li>
  * </ol>
  *
  * @author Elvis Wang
