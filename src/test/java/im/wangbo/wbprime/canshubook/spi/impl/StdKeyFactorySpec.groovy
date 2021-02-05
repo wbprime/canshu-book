@@ -1,7 +1,7 @@
 package im.wangbo.wbprime.canshubook.spi.impl
 
 import com.google.common.collect.ImmutableList
-import im.wangbo.wbprime.canshubook.Config
+import im.wangbo.wbprime.canshubook.Configs
 import spock.lang.Specification
 
 /**
@@ -384,7 +384,7 @@ class StdKeyFactorySpec extends Specification {
         given:
         StdKeyFactory.KeySpec settings = StdKeyFactory.CaseSensitiveKeySpec.of(sep)
         StdKeyFactory factory = new StdKeyFactory(settings)
-        Config.Key parent = factory.root();
+        Configs.Key parent = factory.root();
 
         when:
         var key = parent.resolve(str)
@@ -410,7 +410,7 @@ class StdKeyFactorySpec extends Specification {
         given:
         StdKeyFactory.KeySpec settings = StdKeyFactory.CaseSensitiveKeySpec.of(sep)
         StdKeyFactory factory = new StdKeyFactory(settings)
-        Config.Key parent = factory.create(pstr);
+        Configs.Key parent = factory.create(pstr);
 
         when:
         var key = parent.resolve(str)
@@ -439,9 +439,9 @@ class StdKeyFactorySpec extends Specification {
     def "test equals() for root key from different separator spec"() {
         given:
         StdKeyFactory factory1 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("."))
-        Config.Key k1 = factory1.root();
+        Configs.Key k1 = factory1.root();
         StdKeyFactory factory2 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("/"))
-        Config.Key k2 = factory2.root();
+        Configs.Key k2 = factory2.root();
 
         expect:
         k1 != k2
@@ -450,9 +450,9 @@ class StdKeyFactorySpec extends Specification {
     def "test equals() for root key from different case sensitivity spec"() {
         given:
         StdKeyFactory factory1 = new StdKeyFactory(StdKeyFactory.CaseInsensitiveKeySpec.of("."))
-        Config.Key k1 = factory1.root();
+        Configs.Key k1 = factory1.root();
         StdKeyFactory factory2 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("."))
-        Config.Key k2 = factory2.root();
+        Configs.Key k2 = factory2.root();
 
         expect:
         k1 != k2
@@ -461,9 +461,9 @@ class StdKeyFactorySpec extends Specification {
     def "test equals() for root key from equaled spec"() {
         given:
         StdKeyFactory factory1 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("."))
-        Config.Key k1 = factory1.root();
+        Configs.Key k1 = factory1.root();
         StdKeyFactory factory2 = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("."))
-        Config.Key k2 = factory2.root();
+        Configs.Key k2 = factory2.root();
 
         expect:
         k1 == k2
@@ -472,8 +472,8 @@ class StdKeyFactorySpec extends Specification {
     def "test equals() for non-root case sensitive key"() {
         given:
         StdKeyFactory factory = new StdKeyFactory(StdKeyFactory.CaseSensitiveKeySpec.of("Z"))
-        Config.Key key1 = factory.create(str1);
-        Config.Key key2 = factory.create(str2);
+        Configs.Key key1 = factory.create(str1);
+        Configs.Key key2 = factory.create(str2);
 
         expect:
         key1 == key2

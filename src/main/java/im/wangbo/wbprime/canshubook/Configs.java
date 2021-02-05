@@ -240,4 +240,35 @@ public final class Configs {
         }
     }
 
+    //
+    // implementations
+    //
+
+    public static BooleanValue value(final boolean v) {
+        return ConfigValues.of(v);
+    }
+
+    public static NumberValue value(final int v) {
+        return ConfigValues.of(v);
+    }
+
+    public static NumberValue value(final long v) {
+        return ConfigValues.of(v);
+    }
+
+    public static NumberValue value(final BigDecimal v) {
+        return ConfigValues.of(v);
+    }
+
+    public static StringValue value(final String v) {
+        return ConfigValues.of(v);
+    }
+
+    public static ListValue value(final Iterable<? extends Configs.Value> v) {
+        return ConfigValues.of(v);
+    }
+
+    public static MapValue value(final Map<Configs.Key, ? extends Configs.Value> v) {
+        return ConfigValues.of(v);
+    }
 }
