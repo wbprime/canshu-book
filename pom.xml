@@ -11,6 +11,7 @@
 
     <modules>
         <module>api</module>
+        <module>typesafe-adaptor</module>
     </modules>
 
     <properties>
