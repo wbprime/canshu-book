@@ -18,37 +18,37 @@ public interface Config {
 
     List<Config> list(final String key);
 
-    <T> Optional<T> as(final Class<T> clz, final ConfigValueVisitor<T> visitor);
+    <T> Optional<T> as(final ConfigValueVisitor<T> visitor);
 
-    default OptionalInt getAsIntNumber(final String str) {
-        return as(OptionalInt.class, Configs.forOptionalInt()).orElse(OptionalInt.empty());
+    default OptionalInt getAsIntNumber() {
+        return as(Configs.forOptionalInt()).orElse(OptionalInt.empty());
     }
 
-    default OptionalLong getAsLongNumber(final String str) {
-        return as(OptionalLong.class, Configs.forOptionalLong()).orElse(OptionalLong.empty());
+    default OptionalLong getAsLongNumber() {
+        return as(Configs.forOptionalLong()).orElse(OptionalLong.empty());
     }
 
-    default OptionalDouble getAsDoubleNumber(final String str) {
-        return as(OptionalDouble.class, Configs.forOptionalDouble()).orElse(OptionalDouble.empty());
+    default OptionalDouble getAsDoubleNumber() {
+        return as(Configs.forOptionalDouble()).orElse(OptionalDouble.empty());
     }
 
-    default Optional<String> getAsString(final String str) {
-        return as(String.class, Configs.forString());
+    default Optional<String> getAsString() {
+        return as(Configs.forString());
     }
 
-    default Optional<Integer> getAsInteger(final String str) {
-        return as(Integer.class, Configs.forInteger());
+    default Optional<Integer> getAsInteger() {
+        return as(Configs.forInteger());
     }
 
-    default Optional<Long> getAsLong(final String str) {
-        return as(Long.class, Configs.forLong());
+    default Optional<Long> getAsLong() {
+        return as(Configs.forLong());
     }
 
-    default Optional<Double> getAsDouble(final String str) {
-        return as(Double.class, Configs.forDouble());
+    default Optional<Double> getAsDouble() {
+        return as(Configs.forDouble());
     }
 
-    default Optional<BigDecimal> getAsBigDecimal(final String str) {
-        return as(BigDecimal.class, Configs.forBigDecimal());
+    default Optional<BigDecimal> getAsBigDecimal() {
+        return as(Configs.forBigDecimal());
     }
 }

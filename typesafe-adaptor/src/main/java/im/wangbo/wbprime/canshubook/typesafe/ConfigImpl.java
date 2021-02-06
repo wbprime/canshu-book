@@ -76,7 +76,7 @@ final class ConfigImpl implements Config {
     }
 
     @Override
-    public <T> Optional<T> as(final Class<T> clz, final ConfigValueVisitor<T> visitor) {
+    public <T> Optional<T> as(final ConfigValueVisitor<T> visitor) {
         return Typesafes.asOptional(delegate, mapKey(prefix, ""), visitor);
     }
 }
