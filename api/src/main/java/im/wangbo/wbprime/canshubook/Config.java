@@ -10,7 +10,9 @@ import java.util.Optional;
  */
 public interface Config extends Configs.Value {
     @Override
-    Configs.ValueType type();
+    default Configs.ValueType type() {
+        return Configs.ValueType.MAP;
+    }
 
     @Override
     default Optional<Configs.BooleanValue> asBoolean() {
@@ -34,11 +36,6 @@ public interface Config extends Configs.Value {
 
     @Override
     default Optional<Configs.MapValue> asMap() {
-        return Optional.empty();
-    }
-
-    @Override
-    default <T> Optional<T> as(final Class<? extends T> clz) {
         return Optional.empty();
     }
 }

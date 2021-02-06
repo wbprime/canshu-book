@@ -13,6 +13,7 @@ import im.wangbo.wbprime.canshubook.Configs.Value;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
@@ -64,11 +65,6 @@ final class ConfigValues {
         static final TheTrue V = new TheTrue();
 
         @Override
-        public <T> Optional<T> as(Class<? extends T> clz) {
-            return Optional.empty();
-        }
-
-        @Override
         public Optional<StringValue> asString() {
             return Optional.of(of("true"));
         }
@@ -80,8 +76,7 @@ final class ConfigValues {
 
         @Override
         public Optional<ListValue> asList() {
-            // TODO return a list of single boolean
-            return Optional.empty();
+            return Optional.of(of(ImmutableList.of(this)));
         }
 
         @Override
@@ -92,11 +87,6 @@ final class ConfigValues {
 
     private static class TheFalse implements BooleanValue {
         static final TheFalse V = new TheFalse();
-
-        @Override
-        public <T> Optional<T> as(Class<? extends T> clz) {
-            return Optional.empty();
-        }
 
         @Override
         public Optional<StringValue> asString() {
@@ -110,8 +100,7 @@ final class ConfigValues {
 
         @Override
         public Optional<ListValue> asList() {
-            // TODO return a list of single boolean
-            return Optional.empty();
+            return Optional.of(of(ImmutableList.of(this)));
         }
 
         @Override
@@ -150,17 +139,11 @@ final class ConfigValues {
 
         @Override
         public Optional<ListValue> asList() {
-            // TODO return a list of single value
-            return Optional.empty();
+            return Optional.of(of(ImmutableList.of(this)));
         }
 
         @Override
         public Optional<MapValue> asMap() {
-            return Optional.empty();
-        }
-
-        @Override
-        public <T> Optional<T> as(Class<? extends T> clz) {
             return Optional.empty();
         }
 
@@ -175,11 +158,6 @@ final class ConfigValues {
 
         TheInt(final int v) {
             this.v = v;
-        }
-
-        @Override
-        public <T> Optional<T> as(Class<? extends T> clz) {
-            return Optional.empty();
         }
 
         @Override
@@ -216,8 +194,7 @@ final class ConfigValues {
 
         @Override
         public Optional<ListValue> asList() {
-            // TODO return a list of single value
-            return Optional.empty();
+            return Optional.of(of(ImmutableList.of(this)));
         }
     }
 
@@ -226,11 +203,6 @@ final class ConfigValues {
 
         TheLong(final long v) {
             this.v = v;
-        }
-
-        @Override
-        public <T> Optional<T> as(Class<? extends T> clz) {
-            return Optional.empty();
         }
 
         @Override
@@ -273,8 +245,7 @@ final class ConfigValues {
 
         @Override
         public Optional<ListValue> asList() {
-            // TODO return a list of single value
-            return Optional.empty();
+            return Optional.of(of(ImmutableList.of(this)));
         }
     }
 
@@ -283,11 +254,6 @@ final class ConfigValues {
 
         TheString(final String v) {
             this.v = v;
-        }
-
-        @Override
-        public <T> Optional<T> as(Class<? extends T> clz) {
-            return Optional.empty();
         }
 
         @Override
@@ -312,8 +278,7 @@ final class ConfigValues {
 
         @Override
         public Optional<ListValue> asList() {
-            // TODO return a list of single value
-            return Optional.empty();
+            return Optional.of(of(ImmutableList.of(this)));
         }
 
         @Override
@@ -330,8 +295,8 @@ final class ConfigValues {
         }
 
         @Override
-        public <T> Optional<T> as(Class<? extends T> clz) {
-            return Optional.empty();
+        public List<Value> get() {
+            return list;
         }
 
         @Override
@@ -489,8 +454,8 @@ final class ConfigValues {
         }
 
         @Override
-        public <T> Optional<T> as(Class<? extends T> clz) {
-            return Optional.empty();
+        public ImmutableMap<Key, Value> get() {
+            return map;
         }
 
         @Override
@@ -510,12 +475,7 @@ final class ConfigValues {
 
         @Override
         public Optional<ListValue> asList() {
-            final ImmutableList<TheMap> list =
-                    map.entrySet().stream()
-                            .map(v -> ImmutableMap.of(v.getKey(), v.getValue()))
-                            .map(TheMap::new)
-                            .collect(ImmutableList.toImmutableList());
-            return Optional.of(of(list));
+            return Optional.of(of(ImmutableList.of(this)));
         }
 
         @Override

@@ -1,6 +1,7 @@
 package im.wangbo.wbprime.canshubook;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -57,7 +58,9 @@ public final class Configs {
 
         Optional<MapValue> asMap();
 
-        <T> Optional<T> as(final Class<? extends T> clz);
+        default <T> Optional<T> as(final Class<? extends T> clz) {
+            return Optional.empty();
+        }
     }
 
     public interface NumberValue extends Value {
@@ -183,6 +186,8 @@ public final class Configs {
     }
 
     public interface ListValue extends Value, List<Value> {
+        List<Value> get();
+
         @Override
         default ValueType type() {
             return ValueType.LIST;
@@ -215,6 +220,8 @@ public final class Configs {
     }
 
     public interface MapValue extends Value, Map<Key, Value> {
+        ImmutableMap<Key, Value> get();
+
         @Override
         default ValueType type() {
             return ValueType.MAP;
