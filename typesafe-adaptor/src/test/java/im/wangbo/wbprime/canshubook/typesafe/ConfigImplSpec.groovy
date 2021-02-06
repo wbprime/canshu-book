@@ -9,4 +9,10 @@ import spock.lang.Specification
  * @since 1.0.0
  */
 class ConfigImplSpec extends Specification {
+    SampleData sampleData
+
+    def "check typesafe Config behavior"() {
+
+
+    }
 }

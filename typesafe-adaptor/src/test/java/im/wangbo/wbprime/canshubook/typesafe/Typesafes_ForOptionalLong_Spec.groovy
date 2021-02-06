@@ -4,7 +4,6 @@ package im.wangbo.wbprime.canshubook.typesafe
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import im.wangbo.wbprime.canshubook.Configs
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -15,69 +14,26 @@ import spock.lang.Unroll
  * @since 1.0.0
  */
 class Typesafes_ForOptionalLong_Spec extends Specification {
-    @Shared
-    String absentKey = "absent_key";
-    @Shared
-    String emptyStringKey = "estring_key";
-    @Shared
-    String stringKey = "string_key";
-    String stringVal
-    @Shared
-    String intKey = "int_key";
-    int intVal
-    @Shared
-    String longKey = "long_key";
-    long longVal
-    @Shared
-    String floatKey = "float_key";
-    double floatVal
-    @Shared
-    String boolKey = "bool_key";
-    boolean boolVal
-    @Shared
-    String mapKey = "map_key";
-    @Shared
-    String mapSubKey1 = "map_sub_key1";
-    @Shared
-    String mapSubKey2 = "map_sub_key2";
-    @Shared
-    String listKey = "list_key";
+    SampleData sampleData
 
     Config config;
 
     void setup() {
-        stringVal = "Z" + UUID.randomUUID().toString()
+        sampleData = SampleData.randomize()
 
-        Random r = new Random()
-        intVal = r.nextInt()
-        longVal = r.nextBoolean() ? (10L + r.nextInt(Integer.MAX_VALUE)) : (-10L - r.nextInt(Integer.MAX_VALUE))
-        floatVal = r.nextDouble()
-        boolVal = r.nextBoolean()
-
-        StringBuilder json = new StringBuilder("{");
-        json.append(String.format("\"%s\":\"%s\",", stringKey, stringVal))
-        json.append(String.format("\"%s\":%d,", intKey, intVal))
-        json.append(String.format("\"%s\":%d,", longKey, longVal))
-        json.append(String.format("\"%s\":%s,", boolKey, boolVal))
-        json.append(String.format("\"%s\":%s,", floatKey, floatVal))
-        json.append(String.format("\"%s\":{\"%s\": \"%s\", \"%s\": \"%s\"},", mapKey, mapSubKey1, stringVal, mapSubKey2, stringVal));
-        json.append(String.format("\"%s\":[{\"%s\": \"%s\"},{\"%s\": \"%s\"}],", listKey, mapSubKey1, stringVal, mapSubKey2, stringVal));
-        json.append(String.format("\"%s\":\"\"", emptyStringKey));
-        json.append("}");
-
-        config = ConfigFactory.parseReader(new StringReader(json.toString()))
+        config = ConfigFactory.parseReader(new StringReader(sampleData.toString()))
     }
 
     def "test get empty string as long"() {
         when:
-        def opt = Typesafes.asOptional(config, emptyStringKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getEmptyStringKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get string as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, stringKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getStringKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
@@ -85,12 +41,12 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     @Unroll
     def "test get int as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, intKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getIntKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         opt.isPresent()
 
         def v = opt.getAsLong()
-        v == intVal
+        v == sampleData.getIntVal()
         where:
         i << (1..100)
     }
@@ -98,12 +54,12 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     @Unroll
     def "test get long as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, longKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getLongKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         opt.isPresent()
 
         def v = opt.getAsLong()
-        v == longVal
+        v == sampleData.getLongVal()
 
         where:
         i << (1..100)
@@ -112,12 +68,12 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     @Unroll
     def "test get float as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, floatKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getFloatKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
-        if ((long) floatVal == floatVal) {
+        if ((long) sampleData.getFloatVal() == sampleData.getFloatVal()) {
             opt.isPresent()
 
-            opt.getAsLong() == floatVal
+            opt.getAsLong() == sampleData.getFloatVal()
         } else {
             !opt.isPresent()
         }
@@ -129,28 +85,28 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     @Unroll
     def "test get bool as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, boolKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getBoolKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get list as long"() {
         when:
-        def opt = Typesafes.asOptional(config, listKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getListKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get map as long"() {
         when:
-        def opt = Typesafes.asOptional(config, mapKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getMapKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get absent value as long"() {
         when:
-        def opt = Typesafes.asOptional(config, absentKey, Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getAbsentKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }

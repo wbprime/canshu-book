@@ -1,6 +1,7 @@
 package im.wangbo.wbprime.canshubook.typesafe;
 
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigList;
 import com.typesafe.config.ConfigValue;
 import im.wangbo.wbprime.canshubook.ConfigValueVisitor;
 
@@ -22,10 +23,6 @@ final class Typesafes {
         if (c.hasPathOrNull(key)) {
             final ConfigValue v = c.getValue(key);
             switch (v.valueType()) {
-                case OBJECT:
-                    return visitor.visitMap();
-                case LIST:
-                    return visitor.visitList();
                 case NUMBER: {
                     final BigDecimal num = new BigDecimal(c.getString(key));
                     try {
@@ -40,6 +37,8 @@ final class Typesafes {
                     return visitor.visitString(c.getString(key));
                 case NULL:
                     return visitor.visitNull();
+                case OBJECT: // falling through
+                case LIST:   // falling through
                 default:
                     return Optional.empty();
             }

@@ -3,7 +3,6 @@ package im.wangbo.wbprime.canshubook.typesafe
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import im.wangbo.wbprime.canshubook.Configs
-import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -14,62 +13,19 @@ import spock.lang.Unroll
  * @since 1.0.0
  */
 class Typesafes_ForString_Spec extends Specification {
-    @Shared
-    String absentKey = "absent_key";
-    @Shared
-    String emptyStringKey = "estring_key";
-    @Shared
-    String stringKey = "string_key";
-    String stringVal
-    @Shared
-    String intKey = "int_key";
-    int intVal
-    @Shared
-    String longKey = "long_key";
-    long longVal
-    @Shared
-    String floatKey = "float_key";
-    double floatVal
-    @Shared
-    String boolKey = "bool_key";
-    boolean boolVal
-    @Shared
-    String mapKey = "map_key";
-    @Shared
-    String mapSubKey1 = "map_sub_key1";
-    @Shared
-    String mapSubKey2 = "map_sub_key2";
-    @Shared
-    String listKey = "list_key";
+    SampleData sampleData
 
     Config config;
 
     void setup() {
-        stringVal = "Z" + UUID.randomUUID().toString()
+        sampleData = SampleData.randomize()
 
-        Random r = new Random()
-        intVal = r.nextInt()
-        longVal = r.nextBoolean() ? (10L + r.nextInt(Integer.MAX_VALUE)) : (-10L - r.nextInt(Integer.MAX_VALUE))
-        floatVal = r.nextDouble()
-        boolVal = r.nextBoolean()
-
-        StringBuilder json = new StringBuilder("{");
-        json.append(String.format("\"%s\":\"%s\",", stringKey, stringVal))
-        json.append(String.format("\"%s\":%d,", intKey, intVal))
-        json.append(String.format("\"%s\":%d,", longKey, longVal))
-        json.append(String.format("\"%s\":%s,", boolKey, boolVal))
-        json.append(String.format("\"%s\":%s,", floatKey, floatVal))
-        json.append(String.format("\"%s\":{\"%s\": \"%s\", \"%s\": \"%s\"},", mapKey, mapSubKey1, stringVal, mapSubKey2, stringVal));
-        json.append(String.format("\"%s\":[{\"%s\": \"%s\"},{\"%s\": \"%s\"}],", listKey, mapSubKey1, stringVal, mapSubKey2, stringVal));
-        json.append(String.format("\"%s\":\"\"", emptyStringKey));
-        json.append("}");
-
-        config = ConfigFactory.parseReader(new StringReader(json.toString()))
+        config = ConfigFactory.parseReader(new StringReader(sampleData.toJson()))
     }
 
     def "test get empty string as string"() {
         when:
-        def opt = Typesafes.asOptional(config, emptyStringKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getEmptyStringKey(), Configs.forString())
         then:
         opt.isPresent()
 
@@ -80,12 +36,12 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get string as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, stringKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getStringKey(), Configs.forString())
         then:
         opt.isPresent()
 
         def v = opt.get()
-        v == stringVal
+        v == sampleData.getStringVal()
         where:
         i << (1..100)
     }
@@ -93,12 +49,12 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get int as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, intKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getIntKey(), Configs.forString())
         then:
         opt.isPresent()
 
         def v = opt.get()
-        v == String.valueOf(intVal)
+        v == String.valueOf(sampleData.getIntVal())
         where:
         i << (1..100)
     }
@@ -106,12 +62,12 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get long as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, longKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getLongKey(), Configs.forString())
         then:
         opt.isPresent()
 
         def v = opt.get()
-        v == String.valueOf(longVal)
+        v == String.valueOf(sampleData.getLongVal())
 
         where:
         i << (1..100)
@@ -120,12 +76,12 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get float as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, floatKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getFloatKey(), Configs.forString())
         then:
         opt.isPresent()
 
         def v = opt.get()
-        v == String.valueOf(floatVal)
+        v == String.valueOf(sampleData.getFloatVal())
 
         where:
         i << (1..100)
@@ -134,12 +90,12 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get bool as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, boolKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getBoolKey(), Configs.forString())
         then:
         opt.isPresent()
 
         def v = opt.get()
-        v == String.valueOf(boolVal)
+        v == String.valueOf(sampleData.getBoolVal())
 
         where:
         i << (1..10)
@@ -147,21 +103,21 @@ class Typesafes_ForString_Spec extends Specification {
 
     def "test get list as string"() {
         when:
-        def opt = Typesafes.asOptional(config, listKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getListKey(), Configs.forString())
         then:
         !opt.isPresent()
     }
 
     def "test get map as string"() {
         when:
-        def opt = Typesafes.asOptional(config, mapKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getMapKey(), Configs.forString())
         then:
         !opt.isPresent()
     }
 
     def "test get absent value as string"() {
         when:
-        def opt = Typesafes.asOptional(config, absentKey, Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getAbsentKey(), Configs.forString())
         then:
         !opt.isPresent()
     }

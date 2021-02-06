@@ -2,6 +2,7 @@ package im.wangbo.wbprime.canshubook;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 
@@ -192,6 +193,99 @@ public final class Configs {
         public Optional<Long> visitFloatingNumber(BigDecimal c) {
             try {
                 return Optional.of(c.longValueExact());
+            } catch (ArithmeticException ex) {
+                return Optional.empty();
+            }
+        }
+    }
+
+    public static ConfigValueVisitor<OptionalDouble> forOptionalDouble() {
+        return ForOptionalDouble.V;
+    }
+
+    private static class ForOptionalDouble implements ConfigValueVisitor<OptionalDouble> {
+        static final ForOptionalDouble V = new ForOptionalDouble();
+
+        @Override
+        public Optional<OptionalDouble> visitString(String c) {
+            try {
+                return Optional.of(OptionalDouble.of(Double.parseDouble(c)));
+            } catch (NumberFormatException ex) {
+                return Optional.empty();
+            }
+        }
+
+        @Override
+        public Optional<OptionalDouble> visitIntegerNumber(long v) {
+            return Optional.of(OptionalDouble.of(v));
+        }
+
+        @Override
+        public Optional<OptionalDouble> visitFloatingNumber(BigDecimal c) {
+            try {
+                return Optional.of(OptionalDouble.of(c.doubleValue()));
+            } catch (ArithmeticException ex) {
+                return Optional.empty();
+            }
+        }
+    }
+
+    public static ConfigValueVisitor<Double> forDouble() {
+        return ForDouble.V;
+    }
+
+    private static class ForDouble implements ConfigValueVisitor<Double> {
+        static final ForDouble V = new ForDouble();
+
+        @Override
+        public Optional<Double> visitString(String c) {
+            try {
+                return Optional.of(Double.valueOf(c));
+            } catch (NumberFormatException ex) {
+                return Optional.empty();
+            }
+        }
+
+        @Override
+        public Optional<Double> visitIntegerNumber(long v) {
+            return Optional.of((double) v);
+        }
+
+        @Override
+        public Optional<Double> visitFloatingNumber(BigDecimal c) {
+            try {
+                return Optional.of(c.doubleValue());
+            } catch (ArithmeticException ex) {
+                return Optional.empty();
+            }
+        }
+    }
+
+    public static ConfigValueVisitor<BigDecimal> forBigDecimal() {
+        return ForBigDecimal.V;
+    }
+
+    private static class ForBigDecimal implements ConfigValueVisitor<BigDecimal> {
+        static final ForBigDecimal V = new ForBigDecimal();
+
+        @Override
+        public Optional<BigDecimal> visitString(String c) {
+            try {
+                return visitFloatingNumber(new BigDecimal(c));
+            } catch (NumberFormatException ex) {
+                return Optional.empty();
+            }
+        }
+
+        @Override
+        public Optional<BigDecimal> visitIntegerNumber(long v) {
+            return visitFloatingNumber(new BigDecimal(v));
+        }
+
+        @Override
+        public Optional<BigDecimal> visitFloatingNumber(BigDecimal c) {
+            try {
+                return Optional.of(c);
             } catch (ArithmeticException ex) {
                 return Optional.empty();
             }

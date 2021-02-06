@@ -33,12 +33,4 @@ public interface ConfigValueVisitor<T> {
     default Optional<T> visitFloatingNumber(final BigDecimal v) {
         return Optional.empty();
     }
-
-    default Optional<T> visitList() {
-        return Optional.empty();
-    }
-
-    default Optional<T> visitMap() {
-        return Optional.empty();
-    }
 }
