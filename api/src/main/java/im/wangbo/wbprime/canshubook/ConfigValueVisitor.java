@@ -26,19 +26,19 @@ public interface ConfigValueVisitor<T> {
         return Optional.empty();
     }
 
-    default Optional<T> visitInteger(final long v) {
+    default Optional<T> visitIntegerNumber(final long v) {
         return Optional.empty();
     }
 
-    default Optional<T> visitFloating(final BigDecimal v) {
+    default Optional<T> visitFloatingNumber(final BigDecimal v) {
         return Optional.empty();
     }
 
-    default Optional<T> visitList(final BigDecimal v) {
+    default Optional<T> visitList() {
         return Optional.empty();
     }
 
-    default Optional<T> visitMap(final BigDecimal v) {
+    default Optional<T> visitMap() {
         return Optional.empty();
     }
 }
