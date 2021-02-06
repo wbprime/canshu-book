@@ -20,15 +20,15 @@ public interface Config {
 
     <T> Optional<T> as(final ConfigValueVisitor<T> visitor);
 
-    default OptionalInt getAsIntNumber() {
+    default OptionalInt getAsOptionalInt() {
         return as(Configs.forOptionalInt()).orElse(OptionalInt.empty());
     }
 
-    default OptionalLong getAsLongNumber() {
+    default OptionalLong getAsOptionalLong() {
         return as(Configs.forOptionalLong()).orElse(OptionalLong.empty());
     }
 
-    default OptionalDouble getAsDoubleNumber() {
+    default OptionalDouble getAsOptionalDouble() {
         return as(Configs.forOptionalDouble()).orElse(OptionalDouble.empty());
     }
 

@@ -22,24 +22,17 @@ final class ConfigImpl implements Config {
     private static final CharMatcher DOT = CharMatcher.is(SEP);
 
     private final com.typesafe.config.Config delegate;
-    private final String prefix;
 
     ConfigImpl(final com.typesafe.config.Config delegate) {
-        this(delegate, "");
-    }
-
-    ConfigImpl(final com.typesafe.config.Config delegate, final String prefix) {
         this.delegate = delegate;
-        this.prefix = prefix;
     }
 
     @Override
     public Optional<Config> get(final String k) {
-        final String key = mapKey(prefix, k);
-        if (delegate.hasPath(key)) {
-            final ConfigValue cv = delegate.getValue(key);
+        if (delegate.hasPath(k)) {
+            final ConfigValue cv = delegate.getValue(k);
             if (cv.valueType() != ConfigValueType.LIST && cv.valueType() != ConfigValueType.NULL) {
-                return Optional.of(new ConfigImpl(delegate, key));
+                return Optional.of(new ConfigImpl(delegate.atPath(k)));
             }
         }
 
@@ -48,9 +41,8 @@ final class ConfigImpl implements Config {
 
     @Override
     public List<Config> list(String k) {
-        final String key = mapKey(prefix, k);
-        if (delegate.hasPath(key)) {
-            final ConfigValue cv = delegate.getValue(key);
+        if (delegate.hasPath(k)) {
+            final ConfigValue cv = delegate.getValue(k);
             if (cv.valueType() == ConfigValueType.NULL) {
                 return ImmutableList.of();
             } else if (cv.valueType() == ConfigValueType.LIST) {
@@ -71,12 +63,8 @@ final class ConfigImpl implements Config {
         return ImmutableList.of();
     }
 
-    private static String mapKey(final String prefix, final String str) {
-        return DOT.trimFrom(prefix + SEP + str);
-    }
-
     @Override
     public <T> Optional<T> as(final ConfigValueVisitor<T> visitor) {
-        return Typesafes.asOptional(delegate, mapKey(prefix, ""), visitor);
+        return Typesafes.asOptional(delegate, "", visitor);
     }
 }
