@@ -20,6 +20,8 @@ public final class Typesafes {
 
     public static <T> Optional<T> asOptional(final Config c, final String key, final Visitor<T> visitor) {
         if (c.hasPathOrNull(key)) {
+            if (c.getIsNull(key)) return visitor.visitNull();
+
             final ConfigValue v = c.getValue(key);
             switch (v.valueType()) {
                 case NUMBER: {
@@ -35,7 +37,7 @@ public final class Typesafes {
                 case STRING:
                     return visitor.visitString(c.getString(key));
                 case NULL:
-                    return visitor.visitNull();
+                    throw new IllegalStateException("Should not reach here");
                 case OBJECT: // falling through
                 case LIST:   // falling through
                 default:
