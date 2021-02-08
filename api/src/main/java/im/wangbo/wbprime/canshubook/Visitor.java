@@ -10,7 +10,7 @@ import java.util.Optional;
  */
 public interface Visitor<T> {
     static <T> Visitor<T> doNothing() {
-        return Visitors.doNothingVisitor();
+        return Visitors.doNothing();
     }
 
     default Optional<T> visitNull() {

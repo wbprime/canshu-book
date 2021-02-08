@@ -21,7 +21,7 @@ public final class Visitors {
     };
 
     @SuppressWarnings("unchecked")
-    static <T> Visitor<T> doNothingVisitor() {
+    static <T> Visitor<T> doNothing() {
         return (Visitor<T>) Visitors.DO_NOTHING;
     }
 
@@ -253,11 +253,7 @@ public final class Visitors {
 
         @Override
         public Optional<OptionalDouble> visitFloatingNumber(final double c) {
-            try {
-                return Optional.of(OptionalDouble.of(c));
-            } catch (ArithmeticException ex) {
-                return Optional.empty();
-            }
+            return Optional.of(OptionalDouble.of(c));
         }
     }
 
@@ -284,11 +280,7 @@ public final class Visitors {
 
         @Override
         public Optional<Double> visitFloatingNumber(final double c) {
-            try {
-                return Optional.of(c);
-            } catch (ArithmeticException ex) {
-                return Optional.empty();
-            }
+            return Optional.of(c);
         }
     }
 
@@ -315,7 +307,11 @@ public final class Visitors {
 
         @Override
         public Optional<BigDecimal> visitFloatingNumber(final double c) {
-            return visitBigDecimal(new BigDecimal(c));
+            try {
+                return visitBigDecimal(new BigDecimal(c));
+            } catch (NumberFormatException ex) {
+                return Optional.empty();
+            }
         }
 
         private Optional<BigDecimal> visitBigDecimal(final BigDecimal v) {
