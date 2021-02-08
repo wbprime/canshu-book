@@ -39,21 +39,34 @@ public final class Visitors {
 
         @Override
         public Optional<Boolean> visitString(final String c) {
-            if ("1".equals(c) || "Y".equalsIgnoreCase(c) || "true".equalsIgnoreCase(c) || "yes".equalsIgnoreCase(c)) {
-                return Optional.of(Boolean.TRUE);
-            } else if ("0".equals(c) || "N".equalsIgnoreCase(c) || "false".equalsIgnoreCase(c) || "no".equalsIgnoreCase(c)) {
-                return Optional.of(Boolean.FALSE);
-            } else {
-                return Optional.empty();
+            switch (c) {
+                case "1":
+                case "Y":
+                case "y":
+                case "YES":
+                case "yes":
+                case "TRUE":
+                case "true":
+                    return visitBoolean(true);
+                case "0":
+                case "N":
+                case "n":
+                case "NO":
+                case "no":
+                case "FALSE":
+                case "false":
+                    return visitBoolean(false);
+                default:
+                    return Optional.empty();
             }
         }
 
         @Override
         public Optional<Boolean> visitIntegerNumber(final long v) {
             if (1L == v) {
-                return Optional.of(Boolean.TRUE);
+                return visitBoolean(true);
             } else if (0L == v) {
-                return Optional.of(Boolean.FALSE);
+                return visitBoolean(false);
             } else {
                 return Optional.empty();
             }
@@ -61,7 +74,13 @@ public final class Visitors {
 
         @Override
         public Optional<Boolean> visitFloatingNumber(final double c) {
-            return visitIntegerNumber((long) c);
+            if (1.0 == c) {
+                return visitBoolean(true);
+            } else if (0.0 == c) {
+                return visitBoolean(false);
+            } else {
+                return Optional.empty();
+            }
         }
     }
 
@@ -75,7 +94,7 @@ public final class Visitors {
         @Override
         public Optional<OptionalInt> visitString(final String c) {
             try {
-                return visitInt(Integer.parseInt(c));
+                return visitFloatingNumber(Double.parseDouble(c));
             } catch (NumberFormatException ex) {
                 return Optional.empty();
             }
@@ -101,7 +120,7 @@ public final class Visitors {
             }
         }
 
-        public Optional<OptionalInt> visitInt(final int v) {
+        private Optional<OptionalInt> visitInt(final int v) {
             return Optional.of(OptionalInt.of(v));
         }
     }
@@ -116,7 +135,7 @@ public final class Visitors {
         @Override
         public Optional<Integer> visitString(final String c) {
             try {
-                return visitInt(Integer.parseInt(c));
+                return visitFloatingNumber(Double.parseDouble(c));
             } catch (NumberFormatException ex) {
                 return Optional.empty();
             }
@@ -142,7 +161,7 @@ public final class Visitors {
             }
         }
 
-        public Optional<Integer> visitInt(final int v) {
+        private Optional<Integer> visitInt(final int v) {
             return Optional.of(v);
         }
     }
@@ -157,7 +176,7 @@ public final class Visitors {
         @Override
         public Optional<OptionalLong> visitString(final String c) {
             try {
-                return visitIntegerNumber(Long.parseLong(c));
+                return visitFloatingNumber(Double.parseDouble(c));
             } catch (NumberFormatException ex) {
                 return Optional.empty();
             }
@@ -189,7 +208,7 @@ public final class Visitors {
         @Override
         public Optional<Long> visitString(final String c) {
             try {
-                return visitIntegerNumber(Long.parseLong(c));
+                return visitFloatingNumber(Double.parseDouble(c));
             } catch (NumberFormatException ex) {
                 return Optional.empty();
             }
