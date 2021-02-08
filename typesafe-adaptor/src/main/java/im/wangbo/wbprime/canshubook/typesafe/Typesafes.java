@@ -1,9 +1,8 @@
 package im.wangbo.wbprime.canshubook.typesafe;
 
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigList;
 import com.typesafe.config.ConfigValue;
-import im.wangbo.wbprime.canshubook.ConfigValueVisitor;
+import im.wangbo.wbprime.canshubook.Visitor;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -14,12 +13,12 @@ import java.util.Optional;
  * @author Elvis Wang
  * @since 1.0.0
  */
-final class Typesafes {
+public final class Typesafes {
     private Typesafes() {
         throw new UnsupportedOperationException("Construction forbidden");
     }
 
-    static <T> Optional<T> asOptional(final Config c, final String key, final ConfigValueVisitor<T> visitor) {
+    public static <T> Optional<T> asOptional(final Config c, final String key, final Visitor<T> visitor) {
         if (c.hasPathOrNull(key)) {
             final ConfigValue v = c.getValue(key);
             switch (v.valueType()) {
@@ -28,7 +27,7 @@ final class Typesafes {
                     try {
                         return visitor.visitIntegerNumber(num.longValueExact());
                     } catch (ArithmeticException ex) {
-                        return visitor.visitFloatingNumber(num);
+                        return visitor.visitFloatingNumber(num.doubleValue());
                     }
                 }
                 case BOOLEAN:

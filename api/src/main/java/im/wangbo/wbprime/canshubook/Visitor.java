@@ -1,6 +1,5 @@
 package im.wangbo.wbprime.canshubook;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
@@ -9,9 +8,9 @@ import java.util.Optional;
  * @author Elvis Wang
  * @since 1.0.0
  */
-public interface ConfigValueVisitor<T> {
-    static <T> ConfigValueVisitor<T> doNothing() {
-        return Configs.doNothingVisitor();
+public interface Visitor<T> {
+    static <T> Visitor<T> doNothing() {
+        return Visitors.doNothingVisitor();
     }
 
     default Optional<T> visitNull() {
@@ -30,7 +29,7 @@ public interface ConfigValueVisitor<T> {
         return Optional.empty();
     }
 
-    default Optional<T> visitFloatingNumber(final BigDecimal v) {
+    default Optional<T> visitFloatingNumber(final double v) {
         return Optional.empty();
     }
 }

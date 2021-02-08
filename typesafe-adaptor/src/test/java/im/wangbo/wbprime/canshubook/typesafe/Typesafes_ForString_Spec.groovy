@@ -2,7 +2,7 @@ package im.wangbo.wbprime.canshubook.typesafe
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-import im.wangbo.wbprime.canshubook.Configs
+import im.wangbo.wbprime.canshubook.Visitors
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -25,7 +25,7 @@ class Typesafes_ForString_Spec extends Specification {
 
     def "test get empty string as string"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getEmptyStringKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getEmptyStringKey(), Visitors.forString())
         then:
         opt.isPresent()
 
@@ -36,7 +36,7 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get string as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getStringKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getStringKey(), Visitors.forString())
         then:
         opt.isPresent()
 
@@ -49,7 +49,7 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get int as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getIntKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getIntKey(), Visitors.forString())
         then:
         opt.isPresent()
 
@@ -62,7 +62,7 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get long as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getLongKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getLongKey(), Visitors.forString())
         then:
         opt.isPresent()
 
@@ -76,7 +76,7 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get float as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getFloatKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getFloatKey(), Visitors.forString())
         then:
         opt.isPresent()
 
@@ -90,7 +90,7 @@ class Typesafes_ForString_Spec extends Specification {
     @Unroll
     def "test get bool as string repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getBoolKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getBoolKey(), Visitors.forString())
         then:
         opt.isPresent()
 
@@ -103,21 +103,21 @@ class Typesafes_ForString_Spec extends Specification {
 
     def "test get list as string"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getListKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getListKey(), Visitors.forString())
         then:
         !opt.isPresent()
     }
 
     def "test get map as string"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getMapKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getMapKey(), Visitors.forString())
         then:
         !opt.isPresent()
     }
 
     def "test get absent value as string"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getAbsentKey(), Configs.forString())
+        def opt = Typesafes.asOptional(config, sampleData.getAbsentKey(), Visitors.forString())
         then:
         !opt.isPresent()
     }

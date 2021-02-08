@@ -3,7 +3,7 @@ package im.wangbo.wbprime.canshubook.typesafe
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-import im.wangbo.wbprime.canshubook.Configs
+import im.wangbo.wbprime.canshubook.Visitors
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -21,19 +21,19 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     void setup() {
         sampleData = SampleData.randomize()
 
-        config = ConfigFactory.parseReader(new StringReader(sampleData.toString()))
+        config = ConfigFactory.parseReader(new StringReader(sampleData.toJson()))
     }
 
     def "test get empty string as long"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getEmptyStringKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getEmptyStringKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get string as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getStringKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getStringKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
@@ -41,7 +41,7 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     @Unroll
     def "test get int as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getIntKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getIntKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         opt.isPresent()
 
@@ -54,7 +54,7 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     @Unroll
     def "test get long as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getLongKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getLongKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         opt.isPresent()
 
@@ -68,7 +68,7 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     @Unroll
     def "test get float as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getFloatKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getFloatKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         if ((long) sampleData.getFloatVal() == sampleData.getFloatVal()) {
             opt.isPresent()
@@ -85,28 +85,28 @@ class Typesafes_ForOptionalLong_Spec extends Specification {
     @Unroll
     def "test get bool as long repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getBoolKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getBoolKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get list as long"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getListKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getListKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get map as long"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getMapKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getMapKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get absent value as long"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getAbsentKey(), Configs.forOptionalLong()).orElse(OptionalLong.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getAbsentKey(), Visitors.forOptionalLong()).orElse(OptionalLong.empty())
         then:
         !opt.isPresent()
     }

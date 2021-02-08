@@ -3,8 +3,7 @@ package im.wangbo.wbprime.canshubook.typesafe
 
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-import im.wangbo.wbprime.canshubook.Configs
-import spock.lang.Shared
+import im.wangbo.wbprime.canshubook.Visitors
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -27,14 +26,14 @@ class Typesafes_ForOptionalInt_Spec extends Specification {
 
     def "test get empty string as int"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getEmptyStringKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getEmptyStringKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get string as int repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getStringKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getStringKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         !opt.isPresent()
     }
@@ -42,7 +41,7 @@ class Typesafes_ForOptionalInt_Spec extends Specification {
     @Unroll
     def "test get int as int repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getIntKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getIntKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         opt.isPresent()
 
@@ -55,7 +54,7 @@ class Typesafes_ForOptionalInt_Spec extends Specification {
     @Unroll
     def "test get long as int repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getLongKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getLongKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         opt.isPresent()
 
@@ -69,7 +68,7 @@ class Typesafes_ForOptionalInt_Spec extends Specification {
     @Unroll
     def "test get float as int repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getFloatKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getFloatKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         if ((int) sampleData.getFloatVal() == sampleData.getFloatVal()) {
             opt.isPresent()
@@ -86,28 +85,28 @@ class Typesafes_ForOptionalInt_Spec extends Specification {
     @Unroll
     def "test get bool as int repeated #i"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getBoolKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getBoolKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get list as int"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getListKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getListKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get map as int"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getMapKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getMapKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         !opt.isPresent()
     }
 
     def "test get absent value as int"() {
         when:
-        def opt = Typesafes.asOptional(config, sampleData.getAbsentKey(), Configs.forOptionalInt()).orElse(OptionalInt.empty())
+        def opt = Typesafes.asOptional(config, sampleData.getAbsentKey(), Visitors.forOptionalInt()).orElse(OptionalInt.empty())
         then:
         !opt.isPresent()
     }
